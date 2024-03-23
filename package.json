@@ -4,13 +4,15 @@
   "description": "A user management service",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node src/server.ts"
+    "dev": "node src/server.js",
+    "format:check": "prettier . --check",
+    "format:fix": "prettier . --write"
   },
   "author": "Prakhar Nagore <prakharnagore000@gmail.com>",
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^20.11.30",
+    "prettier": "3.2.5",
     "typescript": "^5.4.3"
   }
 }
