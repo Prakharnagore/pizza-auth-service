@@ -1,9 +1,3 @@
-function login(username: string): string {
-    // console.log(username);
-    const user = { name: "Prakhar" };
-    const name = user.name;
+// import { Config } from "./config";
 
-    return username + name;
-}
-
-login("Prakhar");
+// console.log('PORT',Config.PORT,Config.NODE_ENV);
