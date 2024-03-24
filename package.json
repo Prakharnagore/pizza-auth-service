@@ -24,7 +24,10 @@
         "prettier": "3.2.5",
         "typescript": "^5.4.3"
     },
-    "lint-staged":{
-        "*.ts":["npm run lint:fix","npm run format:fix"]
+    "lint-staged": {
+        "*.ts": [
+            "npm run lint:fix",
+            "npm run format:fix"
+        ]
     }
 }
