@@ -1,3 +1,16 @@
-// import { Config } from "./config";
+import app from "./app";
+import { Config } from "./config";
 
-// console.log('PORT',Config.PORT,Config.NODE_ENV);
+const startServer = () => {
+    const PORT = Config.PORT;
+    try {
+        // eslint-disable-next-line no-console
+        app.listen(PORT, () => console.log(`Listening on ${PORT}`));
+    } catch (err) {
+        // eslint-disable-next-line no-console
+        console.log(err);
+        process.exit(1);
+    }
+};
+
+startServer();
