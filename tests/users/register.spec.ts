@@ -30,7 +30,7 @@ describe("POST /auth/register", () => {
                 firstName: "Prakhar",
                 lastName: "Nagore",
                 email: "prakharnagore000@gmail.com",
-                password: "secret",
+                password: "secret01",
             };
             // Act
             const response = await request(app)
@@ -46,7 +46,7 @@ describe("POST /auth/register", () => {
                 firstName: "Prakhar",
                 lastName: "Nagore",
                 email: "prakharnagore000@gmail.com",
-                password: "secret",
+                password: "secret01",
             };
             // Act
             const response = await request(app)
@@ -63,7 +63,7 @@ describe("POST /auth/register", () => {
                 firstName: "Prakhar",
                 lastName: "Nagore",
                 email: "prakharnagore000@gmail.com",
-                password: "secret",
+                password: "secret01",
             };
             // Act
             // const response =
@@ -83,7 +83,7 @@ describe("POST /auth/register", () => {
                 firstName: "Prakhar",
                 lastName: "Nagore",
                 email: "prakharnagore000@gmail.com",
-                password: "secret",
+                password: "secret01",
             };
             // Act
             // const response =
@@ -100,7 +100,7 @@ describe("POST /auth/register", () => {
                 firstName: "Prakhar",
                 lastName: "Nagore",
                 email: "prakharnagore000@gmail.com",
-                password: "secret",
+                password: "secret01",
             };
             // Act
             await request(app).post("/auth/register").send(userData);
@@ -116,7 +116,7 @@ describe("POST /auth/register", () => {
                 firstName: "Prakhar",
                 lastName: "Nagore",
                 email: "prakharnagore000@gmail.com",
-                password: "secret",
+                password: "secret01",
             };
             // Act
             await request(app).post("/auth/register").send(userData);
@@ -133,7 +133,7 @@ describe("POST /auth/register", () => {
                 firstName: "Prakhar",
                 lastName: "Nagore",
                 email: "prakharnagore000@gmail.com",
-                password: "secret",
+                password: "secret01",
             };
             const userRepository = connection.getRepository(User);
             await userRepository.save({ ...userData, role: Roles.CUSTOMER });
@@ -155,7 +155,61 @@ describe("POST /auth/register", () => {
                 firstName: "Prakhar",
                 lastName: "Nagore",
                 // email: "prakharnagore000@gmail.com",
-                password: "secret",
+                password: "secret01",
+            };
+            // Act
+            const response = await request(app)
+                .post("/auth/register")
+                .send(userData);
+            // Assert
+            expect(response.statusCode).toBe(400);
+            const userRepository = connection.getRepository(User);
+            const users = await userRepository.find();
+            expect(users).toHaveLength(0);
+        });
+        it("should return 400 status code if firstName field is missing", async () => {
+            // Arrange
+            const userData = {
+                // firstName: "Prakhar",
+                lastName: "Nagore",
+                email: "prakharnagore000@gmail.com",
+                password: "secret01",
+            };
+            // Act
+            const response = await request(app)
+                .post("/auth/register")
+                .send(userData);
+            // Assert
+            expect(response.statusCode).toBe(400);
+            const userRepository = connection.getRepository(User);
+            const users = await userRepository.find();
+            expect(users).toHaveLength(0);
+        });
+        it("should return 400 status code if lastName field is missing", async () => {
+            // Arrange
+            const userData = {
+                firstName: "Prakhar",
+                // lastName: "Nagore",
+                email: "prakharnagore000@gmail.com",
+                password: "secret01",
+            };
+            // Act
+            const response = await request(app)
+                .post("/auth/register")
+                .send(userData);
+            // Assert
+            expect(response.statusCode).toBe(400);
+            const userRepository = connection.getRepository(User);
+            const users = await userRepository.find();
+            expect(users).toHaveLength(0);
+        });
+        it("should return 400 status code if password field is missing", async () => {
+            // Arrange
+            const userData = {
+                firstName: "Prakhar",
+                lastName: "Nagore",
+                email: "prakharnagore000@gmail.com",
+                // password: "secret01",
             };
             // Act
             const response = await request(app)
@@ -176,7 +230,7 @@ describe("POST /auth/register", () => {
                 firstName: "Prakhar",
                 lastName: "Nagore",
                 email: " prakharnagore000@gmail.com ",
-                password: "secret",
+                password: "secret01",
             };
             // Act
             await request(app).post("/auth/register").send(userData);
@@ -185,6 +239,61 @@ describe("POST /auth/register", () => {
             const users = await userRepository.find();
             const user = users[0];
             expect(user.email).toBe("prakharnagore000@gmail.com");
+        });
+        it("should return 400 status code if email is not a valid email", async () => {
+            // Arrange
+            const userData = {
+                firstName: "Prakhar",
+                lastName: "Nagore",
+                email: " prakharnagore000",
+                password: "secret01",
+            };
+            // Act
+            const response = await request(app)
+                .post("/auth/register")
+                .send(userData);
+            // Assert
+            expect(response.statusCode).toBe(400);
+            // Assert
+            const userRepository = connection.getRepository(User);
+            const users = await userRepository.find();
+            expect(users).toHaveLength(0);
+        });
+        it("should return 400 status code if password length is less than 8 character", async () => {
+            // Arrange
+            const userData = {
+                firstName: "Prakhar",
+                lastName: "Nagore",
+                email: "prakharnagore000@gmail.com",
+                password: "secret",
+            };
+            // Act
+            const response = await request(app)
+                .post("/auth/register")
+                .send(userData);
+            // Assert
+            expect(response.statusCode).toBe(400);
+            const userRepository = connection.getRepository(User);
+            const users = await userRepository.find();
+            expect(users).toHaveLength(0);
+        });
+        it("should return an array of error messages if email is missing", async () => {
+            // Arrange
+            const userData = {
+                firstName: "Prakhar",
+                lastName: "Nagore",
+                email: "prakharnagore000@gmail.com",
+                password: "secret",
+            };
+            // Act
+            const response = await request(app)
+                .post("/auth/register")
+                .send(userData);
+            // Assert
+            expect(response.body).toHaveProperty("errors");
+            expect(
+                (response.body as Record<string, string>).error.length,
+            ).toBeGreaterThan(0);
         });
     });
 });
