@@ -292,7 +292,7 @@ describe("POST /auth/register", () => {
             // Assert
             expect(response.body).toHaveProperty("errors");
             expect(
-                (response.body as Record<string, string>).error.length,
+                (response.body as Record<string, string>).errors.length,
             ).toBeGreaterThan(0);
         });
     });
