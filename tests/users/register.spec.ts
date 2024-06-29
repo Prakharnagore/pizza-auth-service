@@ -5,6 +5,7 @@ import { DataSource } from "typeorm";
 import { AppDataSource } from "../../src/config/data-source";
 import { Roles } from "../../src/constants";
 import { isJwt } from "../utils";
+import { RefreshToken } from "../../src/entity/RefreshToken";
 
 describe("POST /auth/register", () => {
     let connection: DataSource;
@@ -77,7 +78,6 @@ describe("POST /auth/register", () => {
             expect(users[0].lastName).toBe(userData.lastName);
             expect(users[0].email).toBe(userData.email);
         });
-
         it("should return an id of the created user", async () => {
             // Arrange
             const userData = {
@@ -161,12 +161,10 @@ describe("POST /auth/register", () => {
                 .post("/auth/register")
                 .send(userData);
 
-            // changed ?
-            interface Headers {
-                ["set-cookie"]?: string[];
-            }
-
             // Assert (as unknown added)
+            interface Headers {
+                ["set-cookie"]?: string[]; // changed ?
+            }
             let accessToken = null;
             let refreshToken = null;
 
@@ -186,6 +184,33 @@ describe("POST /auth/register", () => {
 
             expect(isJwt(accessToken)).toBeTruthy();
             expect(isJwt(refreshToken)).toBeTruthy();
+        });
+        it("should store the refresh token in the database", async () => {
+            // Arrange
+            const userData = {
+                firstName: "Prakhar",
+                lastName: "Nagore",
+                email: "prakharnagore000@gmail.com",
+                password: "secret01",
+            };
+            // Act
+            const response = await request(app)
+                .post("/auth/register")
+                .send(userData);
+            // Assert
+
+            const refreshTokenRepo = connection.getRepository(RefreshToken);
+            // const refreshTokens = await refreshTokenRepo.find();
+            // expect(refreshTokens).toHaveLength(1);
+
+            const tokens = await refreshTokenRepo
+                .createQueryBuilder("refreshToken")
+                .where("refreshToken.userId= :userId", {
+                    userId: (response.body as Record<string, string>).id,
+                })
+                .getMany();
+
+            expect(tokens).toHaveLength(1);
         });
     });
 
