@@ -6,6 +6,8 @@ import { describe } from "node:test";
 import createJWKSMock, { JWKSMock } from "mock-jwks";
 import { User } from "../../src/entity/User";
 import { Roles } from "../../src/constants";
+import { Tenant } from "../../src/entity/Tenant";
+import { createTenant } from "../utils";
 
 describe("POST /users", () => {
     let connection: DataSource;
@@ -33,6 +35,9 @@ describe("POST /users", () => {
 
     describe("Given all fields", () => {
         it("should persist the user in the database", async () => {
+            // create tenant first
+            const tenant = await createTenant(connection.getRepository(Tenant));
+
             const adminToken = jwks.token({
                 sub: "1",
                 role: Roles.ADMIN,
@@ -44,7 +49,8 @@ describe("POST /users", () => {
                 lastName: "Nagore",
                 email: "prakharnagore000@gmail.com",
                 password: "secret01",
-                tenantId: 1,
+                tenantId: tenant.id,
+                role: Roles.MANAGER,
             };
 
             // Add token to cookie
@@ -61,6 +67,9 @@ describe("POST /users", () => {
             expect(users[0].email).toBe(userData.email);
         });
         it("should create a manager user", async () => {
+            // create tenant first
+            const tenant = await createTenant(connection.getRepository(Tenant));
+
             const adminToken = jwks.token({
                 sub: "1",
                 role: Roles.ADMIN,
@@ -72,9 +81,9 @@ describe("POST /users", () => {
                 lastName: "Nagore",
                 email: "prakharnagore000@gmail.com",
                 password: "secret01",
-                tenantId: 1,
+                tenantId: tenant.id,
+                role: Roles.MANAGER,
             };
-
             // Add token to cookie
             await request(app)
                 .post("/users")
