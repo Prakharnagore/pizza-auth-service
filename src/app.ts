@@ -13,7 +13,7 @@ app.use(express.static("public"));
 app.use(cookieParser());
 app.use(express.json());
 
-app.get("/", async (req, res) => {
+app.get("/", (req, res) => {
     res.status(200).send("Welcome to auth service");
 });
 
