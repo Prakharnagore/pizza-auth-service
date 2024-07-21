@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 export class CrendentialService {
     async comparePasword(userPasword: string, passwordHash: string) {
