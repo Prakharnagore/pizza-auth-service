@@ -59,6 +59,9 @@ export class UserService {
     async findById(id: number) {
         return await this.userRepository.findOne({
             where: { id },
+            relations: {
+                tenant: true,
+            },
         });
     }
     async update(
