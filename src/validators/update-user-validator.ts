@@ -1,4 +1,5 @@
 import { checkSchema } from "express-validator";
+import { UpdateUserRequest } from "../types";
 
 export default checkSchema({
     firstName: {
@@ -25,8 +26,18 @@ export default checkSchema({
         trim: true,
     },
     tenantId: {
-        notEmpty: true,
         errorMessage: "Tenant id is required!",
         trim: true,
+        custom: {
+            options: async (value: string, { req }) => {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+                const role = (req as UpdateUserRequest).body.role;
+                if (role === "admin") {
+                    return true;
+                } else {
+                    return !!value;
+                }
+            },
+        },
     },
 });
