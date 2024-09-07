@@ -17,5 +17,6 @@ module.exports = {
         "dot-notation": "error",
         // "@typescript-eslint/no-misused-promises": "off",
         "@typescript-eslint/require-await": "off",
+        "@typescript-eslint/no-unsafe-assignment": "off",
     },
 };
