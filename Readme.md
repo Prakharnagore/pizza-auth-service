@@ -1,3 +1,1 @@
-Our awesome auth service
-6yUBYdox5MzcTtch
-9e00a19f4bff58432fa0e5a4ecc33d3133cdf3c3
+Auth Microservice Application
