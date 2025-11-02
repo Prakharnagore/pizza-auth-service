@@ -1,26 +1,25 @@
 import "reflect-metadata";
-import cors from "cors";
+
 import express from "express";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 import authRouter from "./routes/auth";
 import tenantRouter from "./routes/tenant";
 import userRouter from "./routes/user";
-import { Config } from "./config";
 import { globalErrorHandler } from "./middlewares/globalErrorHandler";
+import { Config } from "./config";
 
 const app = express();
-app.use(
-    cors({
-        origin: [Config.ADMIN_DASHBOARD_URL!],
-        credentials: true,
-    }),
-);
+const ALLOWED_DOMAINS = [Config.CLIENT_UI_DOMAIN, Config.ADMIN_UI_DOMAIN];
+
+app.use(cors({ origin: ALLOWED_DOMAINS as string[] }));
+
 app.use(express.static("public"));
 app.use(cookieParser());
 app.use(express.json());
 
 app.get("/", (req, res) => {
-    res.status(200).send("Welcome to auth service");
+    res.send("Welcome to Auth service from K8s");
 });
 
 app.use("/auth", authRouter);
